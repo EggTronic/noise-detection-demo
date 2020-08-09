@@ -3,7 +3,7 @@ const load = require('audio-loader');
 const utils = require('audio-buffer-utils'); // 这个uit 库提供了noise函数可以生成噪音片段 -> 可用于生成噪音数据集
 const train = require('./train');
 
-const SAMPLE_SIZE = 8; // 选择音频数据长度
+const SAMPLE_SIZE = 64; // 选择音频数据长度
 // 此处可以加入更多配置。。。
 // 数据格式化 - 清洗数据 
 // 筛选特征集 （音频长度，音量）
@@ -17,8 +17,8 @@ async function main() {
   console.log('\n=========== 训练模型 =========== ');
   console.log('模型: 全连接神经网络');
   console.log('模型输出: 0 ~ 1');
-  console.log('趋近于0表示正常语音');
-  console.log('趋近于1表示噪音');
+  console.log('0 - 表示正常语音');
+  console.log('1 - 表示噪音');
   model = trainModel(noiseDataSet, normalDataSet);
   console.log('训练完成');
   console.log('\n=========== 测试结果 =========== ');
