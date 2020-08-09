@@ -8,6 +8,23 @@ const SAMPLE_SIZE = 8; // 选择音频数据长度
 // 数据格式化 - 清洗数据 
 // 筛选特征集 （音频长度，音量）
 
+main();
+
+async function main() {
+  console.log('\n=========== 加载数据 =========== ');
+  const [noiseDataSet, normalDataSet] = await prepareTrainningData();
+  console.log('加载完成');
+  console.log('\n=========== 训练模型 =========== ');
+  console.log('模型: 全连接神经网络');
+  console.log('模型输出: 0 ~ 1');
+  console.log('趋近于0表示正常语音');
+  console.log('趋近于1表示噪音');
+  model = trainModel(noiseDataSet, normalDataSet);
+  console.log('训练完成');
+  console.log('\n=========== 测试结果 =========== ');
+  test(model);
+}
+
 async function prepareTrainningData() {
   // 导入数据集
   const noiseAudio = await load({ audio: 'dataset/noise/1.mp3' });
@@ -38,11 +55,17 @@ async function prepareTrainningData() {
     step += SAMPLE_SIZE;
   }
 
-  onTrainningDataLoaded(noiseDataSet, normalDataSet);
+  return [noiseDataSet, normalDataSet];
+}
+
+// 执行训练
+function trainModel(noiseDataSet, normalDataSet) {
+  const model = train.train(noiseDataSet, normalDataSet);
+  return model;
 }
 
 // 执行测试
-async function onTestData(model) {
+async function test(model) {
   // 加载测试数据
   const testAudio = await load({ audio: 'dataset/test/test.mp3' });
   const noiseAudio = await load({ audio: 'dataset/noise/1.mp3' });
@@ -61,16 +84,8 @@ async function onTestData(model) {
   // console.log(testData, noiseData, normalData);
 
   // 结果
-  console.log('[expect 1]: ' + model.run(testData));
-  console.log('[expect 1]: ' + model.run(noiseData));
-  console.log('[expect 0]: '+ model.run(normalData));
+  console.log('测试数据集 - 噪音(期望 = 1): ' + model.run(testData));
+  console.log('训练数据集 - 噪音(期望 = 1): ' + model.run(noiseData));
+  console.log('训练数据集 - 人声(期望 = 0): '+ model.run(normalData));
 }
 
-
-function onTrainningDataLoaded(noiseDataSet, normalDataSet) {
-  const model = train.train(noiseDataSet, normalDataSet);
-
-  onTestData(model); //此处load test数据集即可 
-}
-
-prepareTrainningData();
