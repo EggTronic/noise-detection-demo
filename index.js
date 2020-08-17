@@ -38,20 +38,18 @@ async function prepareTrainningData() {
   // 此处需要注意单双声道问题
   
   // 将数据集切片放入数据集
-  let noiseData;
-  let noiseDataSet = [];
+  let noiseData, normalData;
+  const noiseDataSet = [];
+  const normalDataSet = [];
+  step = 0;
+
   while (step < minLength) {
     noiseData = utils.slice(noiseAudio.audio, 0 + step, SAMPLE_SIZE + step)._channelData[1];
     noiseDataSet.push(noiseData);
-    step += SAMPLE_SIZE;
-  }
 
-  let normalData;
-  let normalDataSet = [];
-  step = 0;
-  while (step < minLength) {
     normalData = utils.slice(normalAudio.audio, 0 + step, SAMPLE_SIZE + step)._channelData[0];
     normalDataSet.push(normalData);
+    
     step += SAMPLE_SIZE;
   }
 
