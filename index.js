@@ -33,7 +33,7 @@ async function prepareTrainningData() {
   // 此处获取两者音频的最小长度为训练最大样本
   const minLength = Math.min(noiseAudio.audio.length, normalAudio.audio.length);
 
-  // 将数据集切片放入数据集
+  // 将数据切片放入数据集
   let noiseData, normalData;
   const noiseDataSet = [];
   const normalDataSet = [];
@@ -75,8 +75,6 @@ async function test(model) {
   let testData = utils.slice(testAudio.audio, position1, position1 + SAMPLE_SIZE)._channelData[0];
   let noiseData = utils.slice(noiseAudio.audio, position2, position2 + SAMPLE_SIZE)._channelData[1];
   let normalData = utils.slice(normalAudio.audio, position3, position3 + SAMPLE_SIZE)._channelData[0];
-
-  // console.log(testData, noiseData, normalData);
 
   // 结果
   console.log('测试数据集 - 噪音(期望 = 1): ' + model.run(testData));
