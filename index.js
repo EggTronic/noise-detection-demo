@@ -33,16 +33,13 @@ async function prepareTrainningData() {
   // 此处获取两者音频的最小长度为训练最大样本
   const minLength = Math.min(noiseAudio.audio.length, normalAudio.audio.length);
 
-  let step = 0;
-
-  // 此处需要注意单双声道问题
-  
   // 将数据集切片放入数据集
   let noiseData, normalData;
   const noiseDataSet = [];
   const normalDataSet = [];
-  step = 0;
-
+  let step = 0;
+  
+  // 此处需要注意单双声道问题
   while (step < minLength) {
     noiseData = utils.slice(noiseAudio.audio, 0 + step, SAMPLE_SIZE + step)._channelData[1];
     noiseDataSet.push(noiseData);
